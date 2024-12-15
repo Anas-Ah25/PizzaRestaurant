@@ -1,31 +1,70 @@
-# Recap for what each solid princple do
-
-### - Single Reposnbility
-Each class should have it's own functionality, not one class making many functions
-### - Open-Closed
-Classes have to be able to be expanded smoothly without restructuring the current code
-### - liskov
-having abtractability which be sufficient for being able to take subclasses with no issues, like polymerphism 
-### - Interface Segregation Principle
- minimal builds and no excessive or unnecessary methods for using the class.
-### - Dependency Inversion Principle
-high-level classes (the "main logic") should not depend on low-level classes (specific implementations). Both should depend on abstractions
----
-# My patterns
+# Design Patterns 
 
 ## 1. Singleton Pattern
-we wanted to use the same instance of the Inventory allover the system, as the ingredients and their quantitiy is a centralized thing cant be controller from many sides, so i applied singlton in the InventoryManager class
-### how this is related to SOLID princples: 
-This is related to the Songle responsbility princple and Interface segregation, where the operations related to inventory will just be made by it, also the Lsp as it can't be subclassed 
+### What is the Singleton Pattern?  
+This pattern is that each class has only one instance allover the app, can't be accessed expept from it
 
-## 2. Decorator
-As required we wanted the system to allow customers to add toppings dynamically without needing to rewrite or modify the base pizza classes, so I applied the Decorator Pattern in the Topping classes that are responsible for adding the topping to a selected piiza, so they take the pizza object and add to it the topping object. So the dcorator acts as a wrapper to the Pizza class
+### How We Used It:  
+We applied the Singleton Pattern in the `InventoryManager` class to ensure all parts of the system access the same inventory instance. This prevents conflicts in ingredient availability and keeps the logic centralized.
 
-### How this is related to SOLID principles:
-This is related to the Open-Closed Principle because we can add new toppings without modifying existing classes. It also follows Single Responsibility since each topping is responsible for adding its cost and description to the pizza. Lastly, the Liskov Substitution Principle is applied since the Topping classes behave like Pizza objects.
+---
 
-## 3. Factory 
-We needed to centralize the creation of pizzas to avoid messy logic for creating different pizza types, so I used a Factory function to handle pizza creation where the function take the type of pizza and redirect to return the desired pizza object from it's class, so code is centralized.
+## 2. Decorator Pattern
+### What is the Decorator Pattern?  
+The Decorator Pattern allows adding new behavior to an object dynamically by wrapping it with additional functionality.
 
-### How this is related to SOLID principles:
-This is related to the Single Responsibility Principle, as the Factory function focuses only on pizza creation. It also aligns with the Open-Closed Principle since we can add new pizza types without modifying the existing logic.
+### How We Used It:  
+We used the Decorator Pattern for adding toppings to pizzas. Toppings like `Cheese`, `Olives`, and `Mushrooms` wrap the base pizza object, adding their own cost and description without altering the pizza's original class.
+
+---
+
+## 3. Factory Pattern
+### What is the Factory Pattern?  
+This pattern centralizes object creation logic, allowing a single point for managing how different objects are created.
+
+### How We Used It:  
+We implemented a `pizza_factory` function to handle the creation of `Margherita` and `Pepperoni` pizzas. This keeps the pizza creation logic in one place and makes it easier to add new pizza types.
+
+---
+
+## 4. Strategy Pattern
+### What is the Strategy Pattern?  
+This pattern defines a family of interchangeable algorithms and lets the client choose which one to use at runtime.
+
+### How We Used It:  
+We applied the Strategy Pattern to handle payments. Different payment methods like `PayPalPayment` and `CreditCardPayment` implement the `PaymentStrategy` interface, letting users select their preferred method during checkout.
+
+---
+
+## Overengineering
+### What Is Overengineering?  
+Overengineering happens when a system becomes too complex by adding unnecessary features, layers, or abstractions.
+
+### Example of Overengineering in Our System:  
+Instead of breaking down responsibilities, we could have created a large `Pizza` class to handle everything—types, toppings, costs, and payments. This would have made the system harder to maintain and extend.
+
+```python
+class Pizza:
+    def __init__(self, type):
+        self.type = type
+        self.toppings = []
+        self.cost = 5.0 if type == "Margherita" else 6.0
+
+    def add_topping(self, topping):
+        if topping == "Cheese":
+            self.toppings.append("Cheese")
+            self.cost += 1.0
+
+    def pay(self, method):
+        if method == "PayPal":
+            print(f"Paid ${self.cost:.2f} using PayPal.")
+```
+
+### Why This Is Bad:
+- Violates the **Single Responsibility Principle** by handling too much in one class.
+- Hard to extend (e.g., adding a new topping or payment method requires modifying this class directly).
+- Increases complexity and reduces clarity.
+
+### How We Avoided It:  
+By breaking the responsibilities into multiple classes (e.g., `Pizza`, `Topping`, `PaymentStrategy`) and applying design patterns, we kept the system clean and flexible.
+

@@ -36,6 +36,13 @@ class Pizza(ABC):
     def get_cost(self):
         pass
 
+# ---------- factory ----------
+def pizza_factory(pizza_type: str) -> Pizza:
+    if pizza_type == "Margherita":
+        return Margherita()
+    elif pizza_type == "Pepperoni":
+        return Pepperoni()
+    
 # ----------- toppings ----------
 class topping(Pizza):
     def __init__(self, pizza: Pizza):
@@ -120,11 +127,10 @@ def main():
             break
 
         
-        pizza = None
-        if pizza_choice == "1":
-            pizza = Margherita()
-        elif pizza_choice == "2":
-            pizza = Pepperoni()
+        if pizza_choice in ["1", "2"]:
+            pizza = pizza_factory(pizza_choice) # create the pizze using the factory
+        elif pizza_choice == "0":
+            break
         else:
             print("This Pizza is unavailable")
             continue
@@ -176,7 +182,7 @@ def main():
         # Show final inventory
         print("\nRemaining Inventory:")
         print(inventory_manager.get_inventory())
-        
+
         # ------------------
 
 
