@@ -38,9 +38,9 @@ class Pizza(ABC):
 
 # ---------- factory ----------
 def pizza_factory(pizza_type: str) -> Pizza:
-    if pizza_type == "Margherita":
+    if pizza_type == "1": # number passed in the input
         return Margherita()
-    elif pizza_type == "Pepperoni":
+    elif pizza_type == "2":
         return Pepperoni()
     
 # ----------- toppings ----------
@@ -56,28 +56,43 @@ class topping(Pizza):
         return self.pizza.get_cost()
     def add_topping(self):
         pass
-    
+
 class Cheese(topping):
     def get_description(self):
-        if  self._inventory_manager.check_and_decrement("Cheese"):
-         return self.pizza.get_description() + ", Cheese"
+        if self._inventory_manager.check_and_decrement("Cheese"):
+            return self.pizza.get_description() + ", Cheese"
+        print("Cheese is out of stock!")
+        return self.pizza.get_description()
+
     def get_cost(self):
-      if self._inventory_manager.check_and_decrement("Cheese"):
-        return super().get_cost() + 1.0
+        if self._inventory_manager.check_and_decrement("Cheese"):
+            return self.pizza.get_cost() + 1.0
+        return self.pizza.get_cost()
+
 class Olives(topping):
     def get_description(self):
-        if  self._inventory_manager.check_and_decrement("Olives"):
-         return self.pizza.get_description() + ", Olives"
+        if self._inventory_manager.check_and_decrement("Olives"):
+            return self.pizza.get_description() + ", Olives"
+        print("Olives are out of stock!")
+        return self.pizza.get_description()
+
     def get_cost(self):
-      if self._inventory_manager.check_and_decrement("Olives"):
-        return super().get_cost() + 0.5
+        if self._inventory_manager.check_and_decrement("Olives"):
+            return self.pizza.get_cost() + 0.5
+        return self.pizza.get_cost()
+
 class Mushrooms(topping):
     def get_description(self):
-        if  self._inventory_manager.check_and_decrement("Mushrooms"):
-         return self.pizza.get_description() + ", Mushrooms"
+        if self._inventory_manager.check_and_decrement("Mushrooms"):
+            return self.pizza.get_description() + ", Mushrooms"
+        print("Mushrooms are out of stock!")
+        return self.pizza.get_description()
+
     def get_cost(self):
         if self._inventory_manager.check_and_decrement("Mushrooms"):
             return self.pizza.get_cost() + 0.7
+        return self.pizza.get_cost()
+
       
     
 # ----------- types ----------
