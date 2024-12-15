@@ -87,8 +87,19 @@ class Pepperoni(Pizza):
 
     def get_cost(self):
         return 6.0
+# --------- payment ----------
+class Payment(ABC):
+    @abstractmethod
+    def pay(self, amount: float):
+        pass
 
+class paypal(Payment):
+    def pay(self, amount: float):
+        print(f"Paid ${amount:.2f} using PayPal")
 
+class credit_card(Payment):
+    def pay(self, amount: float):
+        print(f"Paid ${amount:.2f} using Credit Card")
 
 
 # Main Function
@@ -147,9 +158,26 @@ def main():
         print(f"Description: {pizza.get_description()}")
         print(f"Total cost: ${pizza.get_cost():.2f}")
 
+        # --------  Payment ---------
+        print("\nChoose payment method:")
+        print("1. PayPal")
+        print("2. Credit Card")
+        payment_choice = input("Enter the number of your choice: ")
+        if payment_choice == "1":
+            payment = paypal()
+        elif payment_choice == "2":
+            payment = credit_card()
+        else:
+            print("Payment method unavailable")
+            continue
+
+        payment.pay(pizza.get_cost())
+
         # Show final inventory
         print("\nRemaining Inventory:")
         print(inventory_manager.get_inventory())
+        
+        # ------------------
 
 
 if __name__ == "__main__":
